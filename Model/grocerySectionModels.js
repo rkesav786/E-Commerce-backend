@@ -20,10 +20,13 @@ let grocerySectionData = new Mongoose.Schema({
     type: String,
   },
   image: {
-    type: String,
-  },
-  product_starting_from: {
-    type: String,
+    type: Object,
+    properties: {
+      name: String,
+      size: Number,
+      type: String,
+      preview: String,
+    },
   },
 });
 
