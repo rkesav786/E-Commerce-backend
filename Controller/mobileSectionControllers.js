@@ -4,11 +4,19 @@ exports.saveMobileSection = async (req, res) => {
   try {
     const { _id, section_name, items } = req.body;
 
+    // Transform items data
+    const transformedItems = items.map((item) => ({
+      ...item,
+      price: Number(item.price),
+      offer_price: Number(item.offer_price),
+      model_number: Number(item.model_number.replace(/\D/g, "")), // Remove non-digits
+    }));
+
     if (_id) {
       const updated = await MobileSection.findByIdAndUpdate(
         _id,
-        { section_name, items },
-        { new: true }
+        { section_name, items: transformedItems },
+        { new: true, runValidators: true }
       );
       return res.json({
         success: true,
@@ -19,7 +27,7 @@ exports.saveMobileSection = async (req, res) => {
 
     const newSection = await MobileSection.create({
       section_name,
-      items,
+      items: transformedItems,
     });
 
     res.json({
@@ -34,7 +42,6 @@ exports.saveMobileSection = async (req, res) => {
     });
   }
 };
-
 exports.getMobileSections = async (req, res) => {
   try {
     const sections = await MobileSection.find().sort({ createdAt: -1 });
