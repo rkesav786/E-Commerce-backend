@@ -1,6 +1,6 @@
-const GrocerySection = require("../Model/grocerySectionModels");
+const ElectronicsSection = require("../Model/electronicsSectionModels");
 
-exports.saveGrocerySection = async (req, res) => {
+exports.saveElectronicsSection = async (req, res) => {
   try {
     const { _id, section_name, items } = req.body;
 
@@ -9,10 +9,11 @@ exports.saveGrocerySection = async (req, res) => {
       ...item,
       price: Number(item.price),
       offer_price: Number(item.offer_price),
+      model_number: Number(item.model_number.replace(/\D/g, "")), // Remove non-digits
     }));
 
     if (_id) {
-      const updated = await GrocerySection.findByIdAndUpdate(
+      const updated = await ElectronicsSection.findByIdAndUpdate(
         _id,
         { section_name, items: transformedItems },
         { new: true, runValidators: true }
@@ -24,7 +25,7 @@ exports.saveGrocerySection = async (req, res) => {
       });
     }
 
-    const newSection = await GrocerySection.create({
+    const newSection = await ElectronicsSection.create({
       section_name,
       items: transformedItems,
     });
@@ -41,9 +42,9 @@ exports.saveGrocerySection = async (req, res) => {
     });
   }
 };
-exports.getGrocerySections = async (req, res) => {
+exports.getElectronicsSections = async (req, res) => {
   try {
-    const sections = await GrocerySection.find().sort({ createdAt: -1 });
+    const sections = await ElectronicsSection.find().sort({ createdAt: -1 });
     res.json({
       success: true,
       results: sections,
@@ -56,9 +57,9 @@ exports.getGrocerySections = async (req, res) => {
   }
 };
 
-exports.getGrocerySectionById = async (req, res) => {
+exports.getElectronicsSectionById = async (req, res) => {
   try {
-    const section = await GrocerySection.findById(req.params.id);
+    const section = await ElectronicsSection.findById(req.params.id);
     if (!section) {
       return res.status(404).json({
         success: false,
@@ -79,7 +80,7 @@ exports.getGrocerySectionById = async (req, res) => {
 
 exports.deleteSection = async (req, res) => {
   try {
-    const section = await GrocerySection.findByIdAndDelete(req.params.id);
+    const section = await ElectronicsSection.findByIdAndDelete(req.params.id);
     if (!section) {
       return res.status(404).json({
         success: false,

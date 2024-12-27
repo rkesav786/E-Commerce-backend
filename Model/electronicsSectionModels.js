@@ -12,16 +12,15 @@ const itemSchema = new mongoose.Schema({
     preview: { type: String, maxlength: 6665536 },
   },
   offer_texts: [{ offer_text: { type: String, required: true } }],
-  brand_name: { type: String, required: true },
-  quantity: { type: String, required: true },
+  highlight_texts: [{ highlight_text: { type: String, required: true } }],
+  model_number: { type: String }, // Changed to String
+  model_name: { type: String, required: true },
   color: { type: String, required: true },
-  maximum_shelf_life: { type: String, required: true },
-  nutrient_content: { type: String, required: true },
-  content_type: { type: String },
-  description: { type: String },
+  compatible_devices: { type: String, required: true },
+  bluetooth: { type: String, required: true },
 });
 
-const grocerySectionSchema = new mongoose.Schema(
+const electronicsSectionSchema = new mongoose.Schema(
   {
     section_name: { type: String, required: true },
     items: [itemSchema],
@@ -30,5 +29,8 @@ const grocerySectionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const GrocerySection = mongoose.model("GroceySection", grocerySectionSchema);
-module.exports = GrocerySection;
+const ElectronicsSection = mongoose.model(
+  "ElectronicsSection",
+  electronicsSectionSchema
+);
+module.exports = ElectronicsSection;
