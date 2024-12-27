@@ -8,6 +8,7 @@ const fashionSectionController = require("./Controller/fashionSectionControllers
 const grocerySectionController = require("./Controller/grocerySectionControllers");
 const applianceSectionController = require("./Controller/applianceSectionControllers");
 const electronicsSectionController = require("./Controller/electronicsSectionControllers");
+const homePageController = require("./Controller/homePageControllers");
 
 const app = express();
 require("dotenv").config();
@@ -102,6 +103,12 @@ app.delete(
   "/api/electronics-section/:id",
   electronicsSectionController.deleteSection
 );
+
+// Routes  Home Page
+app.post("/api/home-page", homePageController.saveHomePage);
+app.get("/api/home-page", homePageController.getHomePage);
+app.get("/api/home-page/:id", homePageController.getHomePageById);
+app.delete("/api/home-page/:id", homePageController.deleteSection);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
