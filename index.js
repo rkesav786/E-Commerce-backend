@@ -9,6 +9,16 @@ const grocerySectionController = require("./Controller/grocerySectionControllers
 const applianceSectionController = require("./Controller/applianceSectionControllers");
 const electronicsSectionController = require("./Controller/electronicsSectionControllers");
 const homePageController = require("./Controller/homePageControllers");
+const { registerUser, loginUser } = require("./Controller/authControllers");
+const {
+  MobileSection,
+  GrocerySection,
+  FashionSection,
+  FurnitureSection,
+  ApplianceSection,
+  ElectronicsSection,
+  HomePage,
+} = require("./Controller/Frontend/dataFetchControllers");
 
 const app = express();
 require("dotenv").config();
@@ -109,6 +119,21 @@ app.post("/api/home-page", homePageController.saveHomePage);
 app.get("/api/home-page", homePageController.getHomePage);
 app.get("/api/home-page/:id", homePageController.getHomePageById);
 app.delete("/api/home-page/:id", homePageController.deleteSection);
+
+// Routes
+app.post("/api/register", registerUser);
+app.post("/api/login", loginUser);
+
+// Frontend Fetch Data Api
+
+app.get("/api/frontend/mobile-section", MobileSection);
+app.get("/api/frontend/grocery-section", GrocerySection);
+app.get("/api/frontend/fashion-section", FashionSection);
+app.get("/api/frontend/furniture-section", FurnitureSection);
+app.get("/api/frontend/electronics-section", ElectronicsSection);
+app.get("/api/frontend/appliance-section", ApplianceSection);
+app.get("/api/frontend/home-page", HomePage);
+
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server running on port ${port}`));
