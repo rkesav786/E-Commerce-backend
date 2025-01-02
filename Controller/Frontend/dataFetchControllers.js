@@ -72,13 +72,13 @@ exports.ElectronicsSection = async (req, res) => {
   }
 };
 
-//HomePage
-
 exports.HomePage = async (req, res) => {
   try {
     const items = await HomePage.find();
+    // console.log("Items:", items[0]?.mobile_items);
     res.json(items);
   } catch (error) {
+    console.error("Error:", error);
     res.status(500).json({ message: "Error fetching items" });
   }
 };

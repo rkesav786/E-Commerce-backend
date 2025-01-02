@@ -1,4 +1,5 @@
 const express = require("express");
+const Stripe = require("stripe");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -22,6 +23,10 @@ const {
 
 const app = express();
 require("dotenv").config();
+
+const stripe = new Stripe(
+  "sk_test_51QckJyGIu8d3Ca1cFIgFN2TqCC4RS4PfzcgUEvZinejcoXM2DhUHYZ5E2R3q31eFe8ms5JuH4UGSyTAHhKZ6lJdr00NohoRwSq"
+);
 
 app.use(bodyParser.json({ limit: "500mb" }));
 app.use(bodyParser.urlencoded({ limit: "500mb", extended: true }));
@@ -133,6 +138,23 @@ app.get("/api/frontend/furniture-section", FurnitureSection);
 app.get("/api/frontend/electronics-section", ElectronicsSection);
 app.get("/api/frontend/appliance-section", ApplianceSection);
 app.get("/api/frontend/home-page", HomePage);
+
+app.post("/create-payment-intent", async (req, res) => {
+  const { amount, currency } = req.body; // Receive payment details from frontend
+
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount, // Amount in smallest currency unit (e.g., cents for USD)
+      currency,
+    });
+
+    res.send({
+      clientSecret: paymentIntent.client_secret, // Send this to the frontend
+    });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
 
 
 const port = process.env.PORT || 5000;
