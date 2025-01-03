@@ -3,6 +3,7 @@ const Stripe = require("stripe");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const crypto = require("crypto");
 const mobileSectionController = require("./Controller/mobileSectionControllers");
 const furnitureSectionController = require("./Controller/furnitureSectionControllers");
 const fashionSectionController = require("./Controller/fashionSectionControllers");
@@ -21,8 +22,18 @@ const {
   HomePage,
 } = require("./Controller/Frontend/dataFetchControllers");
 
+const {
+  frontendregisterUser,
+  frontendloginUser,
+  getUserProfile,
+} = require("./Controller/Frontend/UserControllers");
+const authMiddleware = require("./Middleware/Frontend/authMiddleware");
+
 const app = express();
 require("dotenv").config();
+
+const secretKey = crypto.randomBytes(32).toString("base64");
+console.log("Generated JWT Secret:", secretKey);
 
 const stripe = new Stripe(
   "sk_test_51QckJyGIu8d3Ca1cFIgFN2TqCC4RS4PfzcgUEvZinejcoXM2DhUHYZ5E2R3q31eFe8ms5JuH4UGSyTAHhKZ6lJdr00NohoRwSq"
@@ -155,6 +166,14 @@ app.post("/create-payment-intent", async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
+
+// Frontend Register Account
+global.JWT_SECRET = secretKey;
+
+// Routes
+app.post("/api/frontend/register", frontendregisterUser);
+app.post("/api/frontend/login", frontendloginUser);
+app.get("/api/frontend/user", authMiddleware, getUserProfile);
 
 
 const port = process.env.PORT || 5000;
